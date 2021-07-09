@@ -13,6 +13,10 @@ type API struct {
 func NewAPI(t esapi.Transport) *API {
 	return &API{
 		Security: &Security{
+			DeleteActionGroup:  newDeleteActionGroupFunc(t),
+			DeleteInternalUser: newDeleteInternalUserFunc(t),
+			DeleteRole:         newDeleteRoleFunc(t),
+			DeleteRolesMapping: newDeleteRolesMappingFunc(t),
 			GetActionGroup:     newGetActionGroupFunc(t),
 			GetInternalUser:    newGetInternalUserFunc(t),
 			GetRole:            newGetRoleFunc(t),
@@ -24,6 +28,10 @@ func NewAPI(t esapi.Transport) *API {
 // Security allows access to Opendistro Security plugin APIs
 //
 type Security struct {
+	DeleteActionGroup  DeleteActionGroup
+	DeleteInternalUser DeleteInternalUser
+	DeleteRole         DeleteRole
+	DeleteRolesMapping DeleteRolesMapping
 	GetActionGroup     GetActionGroup
 	GetInternalUser    GetInternalUser
 	GetRole            GetRole
