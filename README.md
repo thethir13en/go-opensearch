@@ -15,6 +15,8 @@ Also package provides replacement for **NewClient()** and **NewDefaultClient()**
 Default client uses **https** connection instead of **http**(**go-elasticsearh**), ignores certificate verification by default and
 has **admin/admin** credentials.
 
+# API Coverage
+
 
 # Usage
 ## Import to your project
@@ -32,9 +34,13 @@ require github.com/thethir13en/go-opensearch v0.1.0
 package main
 
 import (
-    osclient "github.com/thethir13en/go-opensearch"
-    "log"
     "context"
+    "encoding/json"
+    "io/ioutil"
+    "log"
+
+    osclient "github.com/thethir13en/go-opensearch"
+    "github.com/tidwall/gjson"
 )
 
 func main() {
@@ -45,7 +51,7 @@ func main() {
     // Prepare request
     //
     req := osclient.GetRoleRequest{
-        Name:     "all_access",
+        Name:     "kibana_user",
         Pretty:   true,
     }
 
@@ -57,6 +63,19 @@ func main() {
     // Log response
     //
     log.Println(res.String())
+    
+    // Convert response to RoleDefinition struct
+    //
+    roleDef := &RoleDefinition{}
+    resBytes, _ := ioutil.Readall(res.Body)
+    // Extract role definition and convert it to string
+    jsondefinition := gjson.GetBytes(resBytes, "*").String()
+    // Decode definition to struct
+    if err := json.Unmarshal([]byte(jsondefinition), roleDef); err != nil {
+        log.Println(err)
+    }
+    // Print index patterns in first IndexPermission of role
+    log.Println(role.IndexPermissions[0].IndexPatterns)
 }
 ```
 Output:
@@ -106,6 +125,8 @@ Output:
     "static" : true
   }
 }
+
+2021/07/09 14:04:24 [.kibana .kibana-6 .kibana_* .opensearch_dashboards .opensearch_dashboards-6 .opensearch_dashboards_*]
 ```
 ### Delete role
 ```bigquery
@@ -144,5 +165,80 @@ Output:
 2021/07/09 14:08:56 [200 OK] {
   "status" : "OK",
   "message" : "'custom_role' deleted."
+}
+```
+### Create or update role(same for other objects)
+```bigquery
+package main
+
+import (
+    "context"
+    "encoding/json"
+    "io/ioutil"
+    "log"
+
+    osclient "github.com/thethir13en/go-opensearch"
+    "github.com/tidwall/gjson"
+)
+
+func main() {
+    // Create new Opensearch Client
+    //
+    es, _ := osclient.NewDefaultClient()
+    
+    // Create Role Definition
+    //
+    roleDef := &osclient.RoleDefinition{
+        Description: "programmatically created role",
+        IndexPermissions: []osclient.IndexPermission{
+            {
+                IndexPatterns: []string{
+                    "hello*",
+                },
+                AllowedActions: []string{
+                    "indices:admin/aliases",
+                },
+            },
+        },
+        TenantPermissions: []osclient.TenantPermission{
+            {
+                TenantPatterns: []string{
+                    "hello*",
+                },
+                AllowedActions: []osclient.TenantPermissionAction{
+                    osclient.TenantPermissionActionKibanaAllRead,
+                    osclient.TenantPermissionActionKibanaAllWrite,
+                },
+            },
+        },
+    }
+
+    // Convert role to json
+    //
+    payload, _ := json.Marshall(roleDef)
+
+    // Prepare request
+    //
+    req := &osclient.PutRoleRequest{
+        Body:   bytes.NewReader(payload),
+        Name:   "custom_role",
+        Pretty: true,
+    }
+    
+    // Send request
+    //
+    res, _ := req.Do(context.TODO(),es)
+    defer res.Body.Close()
+    
+    // Log response
+    //
+    log.Println(res.String())
+}
+```
+Output:
+```bigquery
+2021/07/09 16:27:08 [201 Created] {
+  "status" : "CREATED",
+  "message" : "'custom_role2' created."
 }
 ```
