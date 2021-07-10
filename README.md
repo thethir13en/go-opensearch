@@ -1,5 +1,6 @@
 # go-opensearch
-Extension for go-elasticsearch library supports Opensearch/Opendistro for Elasticsearch APIs.
+
+Extension for go-elasticsearch library supports Opensearch/Opendistro for Elasticsearch APIs.\
 Based on official **go-elasticsearch** package - https://github.com/elastic/go-elasticsearch.
 ---
 
@@ -14,9 +15,6 @@ as before, but also you can use specific APIs requests for **Opensearch\Opendist
 Also package provides replacement for **NewClient()** and **NewDefaultClient()** methods which return **opensearch.Client**.
 Default client uses **https** connection instead of **http**(**go-elasticsearh**), ignores certificate verification by default and
 has **admin/admin** credentials.
-
-# API Coverage
-
 
 # Usage
 ## Import to your project
@@ -239,6 +237,6 @@ Output:
 ```bigquery
 2021/07/09 16:27:08 [201 Created] {
   "status" : "CREATED",
-  "message" : "'custom_role2' created."
+  "message" : "'custom_role' created."
 }
 ```

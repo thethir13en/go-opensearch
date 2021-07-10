@@ -22,8 +22,11 @@ func NewAPI(t esapi.Transport) *API {
 			GetRole:            newGetRoleFunc(t),
 			GetRolesMapping:    newGetRolesMappingFunc(t),
 			PatchRole:          newPatchRoleFunc(t),
+			PatchRolesMapping:  newPatchRolesMappingFunc(t),
 			PostRole:           newPostRoleFunc(t),
+			PostRolesMapping:   newPostRolesMappingFunc(t),
 			PutRole:            newPutRoleFunc(t),
+			PutRolesMapping:    newPutRolesMappingFunc(t),
 		},
 	}
 }
@@ -40,6 +43,9 @@ type Security struct {
 	GetRole            GetRole
 	GetRolesMapping    GetRolesMapping
 	PatchRole          PatchRole
+	PatchRolesMapping  PatchRolesMapping
 	PostRole           PostRole
+	PostRolesMapping   PostRolesMapping
 	PutRole            PutRole
+	PutRolesMapping    PutRolesMapping
 }
