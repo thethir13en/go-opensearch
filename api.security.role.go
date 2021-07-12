@@ -42,7 +42,7 @@ const (
 	// RoleAsynchronousSearchReadAccess Grants permissions to view asynchronous searches, but not to submit, modify, or delete async searches.
 	RoleAsynchronousSearchReadAccess string = "asynchronous_search_read_access"
 
-	// TenantActionKibanaAllRead Tenant Actions
+	// Tenant Actions
 	TenantActionKibanaAllRead  TenantAction = "kibana_all_read"
 	TenantActionKibanaAllWrite TenantAction = "kibana_all_write"
 )
