@@ -18,6 +18,7 @@ func NewAPI(t esapi.Transport) *API {
 			DeleteRole:         newDeleteRoleFunc(t),
 			DeleteRolesMapping: newDeleteRolesMappingFunc(t),
 			GetActionGroup:     newGetActionGroupFunc(t),
+			GetConfig:          newGetConfigFunc(t),
 			GetInternalUser:    newGetInternalUserFunc(t),
 			GetRole:            newGetRoleFunc(t),
 			GetRolesMapping:    newGetRolesMappingFunc(t),
@@ -39,6 +40,7 @@ type Security struct {
 	DeleteRole         DeleteRole
 	DeleteRolesMapping DeleteRolesMapping
 	GetActionGroup     GetActionGroup
+	GetConfig          GetConfig
 	GetInternalUser    GetInternalUser
 	GetRole            GetRole
 	GetRolesMapping    GetRolesMapping
